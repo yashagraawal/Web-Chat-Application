@@ -33,20 +33,6 @@ public class ChatController {
         
         return response;
     }
-	
-	@PostMapping("/api/register")
-    public Map<String, Boolean> register(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
-        String confpassword = credentials.get("confpassword");
-
-        boolean isSuccess = userSer.RegisterUser(email, password, confpassword);
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", isSuccess);
-        
-        return response;
-    }
 
 	@MessageMapping("/chat.sendMessage")
 	@SendTo("/topic/public")

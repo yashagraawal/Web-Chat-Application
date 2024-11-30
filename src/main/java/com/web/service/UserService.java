@@ -34,27 +34,4 @@ public class UserService {
 			return false;
 		}
 	}
-	
-	public boolean RegisterUser(String email, String password, String confpassword) {
-		try {
-			Optional<User> existingUser = userRepo.findById(email);
-			
-			if(!password.equals(confpassword)) {
-				return false;
-			}
-			
-			if(!existingUser.isPresent()) {
-				User curr = new User(email, password);
-				
-				userRepo.save(curr);
-				
-				return true;
-			}else {
-				return false;
-			}
-			
-		}catch(Exception e) {
-			return false;
-		}
-	}
 }

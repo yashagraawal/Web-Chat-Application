@@ -12,13 +12,6 @@ var connectingElement = document.querySelector('.connecting');
 
 var loginPage = document.querySelector('#Login-page');
 var loginForm = document.querySelector('#loginForm');
-var LoginRedirectButton = document.querySelectorAll('.RedirectLogin');
-
-var registerForm = document.querySelector('#registerForm');
-var registerPage = document.querySelector('#Register-page');
-var RegisterRedirectButton = document.querySelectorAll('.Redirectregister');
-
-
 var logoutButtons = document.querySelectorAll('.logoutButton');
 
 
@@ -26,7 +19,6 @@ var stompClient = null;
 var username = null;
 var email = null;
 var password = null;
-var confpassword = null;
 
 var colors = [
 	'#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -62,73 +54,14 @@ function login(event) {
 	}
 }
 
-function register(event) {
-	event.preventDefault(); // Prevent the default form submission
-
-	email = document.querySelector('#email').value.trim();
-	password = document.querySelector('#password').value.trim();
-	confpassword = document.querySelector('#confpassword').value.trim();
-
-	if (email && password) {
-		fetch('/api/register', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email: email, password: password, confpassword: confpassword })
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.json();
-			})
-			.then(data => {
-				if (data.success) {
-					alert('Registration successful! Please login.');
-					RegisterRedirect(); // Redirect to login after successful registration
-				} else {
-					alert('Something went wrong during registration.');
-					document.querySelector('#email').value = '';
-					document.querySelector('#password').value = '';
-					document.querySelector('#confpassword').value = '';
-				}
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				alert('There was an error registering. Please try again.');
-				document.querySelector('#email').value = '';
-				document.querySelector('#password').value = '';
-				document.querySelector('#confpassword').value = '';
-			});
-	}
-}
-
-function LoginRedirect() {
-	loginPage.classList.remove('hidden');
-	usernamePage.classList.add('hidden');
-	chatPage.classList.add('hidden');
-	registerPage.classList.add('hidden');
-}
-
-function RegisterRedirect() {
-	loginPage.classList.add('hidden');
-	usernamePage.classList.add('hidden');
-	chatPage.classList.add('hidden');
-	registerPage.classList.remove('hidden');
-}
-
-
 function checkLoginState() {
 	if (localStorage.getItem('loggedIn') === 'true') {
 		loginPage.classList.add('hidden');
 		usernamePage.classList.remove('hidden');
-		registerPage.classList.add('hidden');
 	} else {
 		loginPage.classList.remove('hidden');
 		usernamePage.classList.add('hidden');
 		chatPage.classList.add('hidden');
-		registerPage.classList.add('hidden');
 	}
 }
 
@@ -235,7 +168,6 @@ function logout() {
 	loginPage.classList.remove('hidden');
 	usernamePage.classList.add('hidden');
 	chatPage.classList.add('hidden');
-	registerPage.classList.add('hidden');
 	document.querySelector('#email').value = '';
 	document.querySelector('#password').value = '';
 	username = null;
@@ -244,11 +176,7 @@ function logout() {
 }
 
 document.addEventListener('DOMContentLoaded', checkLoginState);
-
 loginForm.addEventListener('submit', login, true);
-registerForm.addEventListener('submit', register, true);
 usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', sendMessage, true);
-logoutButtons.forEach(button => button.addEventListener('click', logout, true)); // Add event listener to all logout buttons
-LoginRedirectButton.forEach(button => button.addEventListener('click', LoginRedirect, true));
-RegisterRedirectButton.forEach(button => button.addEventListener('click', RegisterRedirect, true));
+logoutButtons.forEach(button => button.addEventListener('click', logout, true));
